@@ -1,0 +1,58 @@
+* intro questions
+
+  - What programming language do you use day-to-day? Which languages
+    are you familiar with?
+  - are you familiar with lambda calculus?
+
+
+* Why?
+
+  
+  
+* Limitations of our interpreter
+
+  https://www.reddit.com/r/LispMemes/comments/br8koy/metacircular_evaluator_irl/
+
+  Why make a lisp when we already /had/ a lisp? This may feel a bit
+  pointless. In fact, our lisp is poor in features compared to
+  Clojure. So we took a capable language and made a less capable
+  one. What was the point?
+
+  (besides small stuff like getting to pick the syntax of our language.)
+
+  Well, this is just a first step. From here, there are two directions
+  we could take our learning in.
+
+  One direction: alternate semantics. In SICP, the chapters after the
+  interpreter ("metacircular evaluator", in SICP terms) are an
+  interpreter for a [[https://sarabander.github.io/sicp/html/4_002e2.xhtml#g_t4_002e2][lazily evaluated language]] and [[https://sarabander.github.io/sicp/html/4_002e3.xhtml#g_t4_002e3]["nondeterministic
+  computing"]]. So making our own interpreter means we get to choose
+  exciting alternate semantics.
+
+  To introduce the second direction, I'd like to note how much we
+  didn't implement in our interpreter: to implement addition, we used
+  Clojure's ~+~. To implement the environment, we used Clojure data
+  structures. Nowhere did we do any kind of garbage collection – we
+  didn't need to because as our interpreter runs, Clojure data
+  structures are created, then fall out of scope, then get garbage
+  collected. All of these concerns were addressed thanks to working in
+  Clojure (or equivalently, any garbage-collected language with data
+  structures and functions to implement the interpreted language's
+  functions). So the second potential direction for our learning is
+  implementing more of this stuff. This includes how to represent
+  values in memory, compiling lisp to assembly or bytecode, and
+  garbage collection.
+
+* Further reading:
+
+  [[https://github.com/kanaka/mal][mal]] (make a lisp) by Joel Martin
+
+  [[https://sarabander.github.io/sicp/html/4_002e1.xhtml#g_t4_002e1][Structure and Interpretation of Computer Programs: The Metacircular
+  Evaluator]] by Abelson and Sussman
+
+  [[https://craftinginterpreters.com/][Crafting Interpreters]] by Robert Nystrom
+
+  [[https://bernsteinbear.com/blog/compiling-a-lisp-0/][Compiling a Lisp]] by Max Bernstein
+
+  [[https://www.youtube.com/watch?v=BcC3KScZ-yA][Clever Representations & Small Optimizations in Chez Scheme]] by Andy
+  Keep. Includes a good explanation of representing values in memory.
