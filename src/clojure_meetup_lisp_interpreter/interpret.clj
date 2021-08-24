@@ -3,7 +3,7 @@
 
 (defn lookup [environment symbol]
   (if (contains? environment symbol)
-    (first (environment symbol))
+    (get environment symbol)
     (throw (ex-info "symbol is not bound"
                     {:symbol symbol :current-environment environment}))))
 
@@ -33,21 +33,14 @@
                (when (not= provided accepted)
                  (throw (ex-info "arity mismatch"
                                  {:provided provided :accepted accepted})))
-               (eval body (reduce-kv (fn [environment arg value]
-                                       ;; FIXME: we don't need to push
-                                       ;; the new value because we
-                                       ;; only ever use the top
-                                       ;; value. So just "overwrite"
-                                       ;; instead.
-                                       (update environment arg conj value))
-                                     environment
-                                     (zipmap arglist args))))))
+               (eval body (merge environment
+                                 (zipmap arglist args))))))
 
 (def builtin-environment
-  {'+ (list {:type :builtin :function +})
-   '- (list {:type :builtin :function -})
-   '* (list {:type :builtin :function *})
-   '/ (list {:type :builtin :function /})})
+  {'+ {:type :builtin :function +}
+   '- {:type :builtin :function -}
+   '* {:type :builtin :function *}
+   '/ {:type :builtin :function /}})
 
 (comment
   (eval '(((fn (x) (fn (y) (+ x y))) 1) 2) builtin-environment))
