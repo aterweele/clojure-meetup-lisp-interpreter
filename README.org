@@ -1,4 +1,4 @@
-* intro questions
+* Intro questions
 
   - What programming language do you use day-to-day? Which languages
     are you familiar with?
@@ -7,7 +7,40 @@
 
 * Why?
 
-  
+* Plan
+
+  1. introduce the language
+  2. show eval for the first time (this is what SICP does. Is it worth
+     it?)
+  3. introduce predicate functions to recognize every element of the language
+  4. start filling out the ~cond~ in eval
+
+
+* The language
+  our language will have numbers, some math functions, and anonymous
+  functions.
+
+  An *expression* in our language is either
+  - a *number*. Syntax: ~0~, ~-1~, ~1~, ~2~, etc.
+  - a *symbol*. Syntax: ~x~, ~y~, ~+~, etc.
+  - an *anonymous function*. Syntax: ~(fn (s) e)~, where ~s~ is a *symbol*
+    and ~e~ is an *expression*
+  - an *application* of something (a function, presumably) to
+    arguments. Syntax: ~(e e₁ e₂ ...)~ where ~e~, ~e₁~, ~e₂~, etc. are
+    *expressions*. Note that functions any number of arguments.
+* Closures
+  A /closure/ is an anonymous function and the environment in which it
+  is found. For example,
+
+  #+begin_example
+    (fn (x) (fn (y) (+ x y)))
+            ^
+  #+end_example
+
+  consider the inner function. It refers to ~x~. When we run that
+  inner function, we'll need to know the value of ~x~. To do that,
+  we'll construct a closure for the inner function: the environment of
+  the closure will map ~x~ to the correct value.
   
 * Limitations of our interpreter
 
