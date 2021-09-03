@@ -20,14 +20,31 @@
   our language will have numbers, some math functions, and anonymous
   functions.
 
-  An *expression* in our language is either
+  An *expression* in our language is one of
   - a *number*. Syntax: ~0~, ~-1~, ~1~, ~2~, etc.
   - a *symbol*. Syntax: ~x~, ~y~, ~+~, etc.
-  - an *anonymous function*. Syntax: ~(fn (s) e)~, where ~s~ is a *symbol*
-    and ~e~ is an *expression*
+  - an *anonymous function*. Syntax: ~(fn (s₁ s₂ ...) e)~, where ~s₁~,
+    ~s₂~, etc. are *symbols* and ~e~ is an *expression*
   - an *application* of something (a function, presumably) to
     arguments. Syntax: ~(e e₁ e₂ ...)~ where ~e~, ~e₁~, ~e₂~, etc. are
-    *expressions*. Note that functions any number of arguments.
+    *expressions*. Note that we can have any number of arguments.
+
+
+  We'll represent these expressions using Clojure's lists, symbols,
+  and numbers. In my usual Clojure work, using lists and symbols is
+  rare compare to vectors, maps, keywords, and strings, so a quick
+  refresher is in order. Usually in Clojure, if we evaluate ~(+ a 1)~,
+  we'll add ~a~ and 1. But if we /quote/ that expression like ~'(+ a
+  1)~, then we'll get a list of three things: the symbol ~+~, the
+  symbol ~a~, and the number ~1~.
+
+  This language doesn't have a lot, notably it does not have: let,
+  def, or even nil and cons.
+
+* a first look at ~eval~
+  Note the form of ~eval~. We have a single ~cond~ expression, where
+  we test for each kind of expression, then say how to evaluate each
+  kind of expression. Let's walk through each case.
 * Closures
   A /closure/ is an anonymous function and the environment in which it
   is found. For example,
@@ -82,6 +99,8 @@
 
   [[https://sarabander.github.io/sicp/html/4_002e1.xhtml#g_t4_002e1][Structure and Interpretation of Computer Programs: The Metacircular
   Evaluator]] by Abelson and Sussman
+
+  [[https://norvig.com/lispy.html][(How to Write a (Lisp) Interpreter (in Python))]] by Peter Norvig
 
   [[https://craftinginterpreters.com/][Crafting Interpreters]] by Robert Nystrom
 

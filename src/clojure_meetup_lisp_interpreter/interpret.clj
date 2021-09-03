@@ -7,22 +7,26 @@
     (throw (ex-info "symbol is not bound"
                     {:symbol symbol :current-environment environment}))))
 
-(defn self-evaluating? [form] (number? form))
-(defn lambda-form? [form] (= (first form) #_'fn 'λ))
+(defn lambda-expression? [expression]
+  (and (= (count expression) 3)
+       (= (first expression) 'fn)
+       (list? (second expression))))
+(defn application? [expression] (and (list? expression) (not-empty expression)))
 
 (declare apply)
 
-(defn eval [form environment]
+(defn eval [expression environment]
   (cond
-    (self-evaluating? form) form
-    (symbol? form) (lookup environment form)
-    (lambda-form? form) {:type :closure
-                         :function form
-                         :environment environment}
-    (list? form) (apply (eval (first form) environment)
-                        (map #(eval % environment) (rest form)))
-    :else (throw (ex-info "unknown form to evaluate"
-                          {:form form}))))
+    (number? expression) expression
+    (symbol? expression) (lookup environment expression)
+    (lambda-expression? expression) {:type :closure
+                                     :function expression
+                                     :environment environment}
+    (application? expression)
+    (apply (eval (first expression) environment)
+           (map #(eval % environment) (rest expression)))
+    :else (throw (ex-info "unknown expression to evaluate"
+                          {:expression expression}))))
 
 (defn apply [{:as f :keys [type function environment]} args]
   (condp = type
