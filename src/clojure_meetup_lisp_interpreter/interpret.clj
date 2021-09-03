@@ -8,7 +8,8 @@
                     {:symbol symbol :current-environment environment}))))
 
 (defn lambda-expression? [expression]
-  (and (= (count expression) 3)
+  (and (list? expression)
+       (= (count expression) 3)
        (= (first expression) 'fn)
        (list? (second expression))))
 (defn application? [expression] (and (list? expression) (not-empty expression)))
