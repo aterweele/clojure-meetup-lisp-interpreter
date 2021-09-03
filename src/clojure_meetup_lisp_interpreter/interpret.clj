@@ -184,6 +184,12 @@
  '(defn inc (x) (+ 1 x))
  nil)
 
+(eval
+ '(defmacro let (binding body)
+    (quasiquote ((fn ((unquote (first binding))) (unquote body))
+                 (unquote (first (rest binding))))))
+ nil)
+
 (comment
   (eval '(((fn (x) (fn (y) (+ x y))) 1) 2) nil))
 
