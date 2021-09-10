@@ -12,17 +12,38 @@
        (= (count expression) 3)
        (= (first expression) 'fn)
        (list? (second expression))))
+(defn if-expression? [expression]
+  (and (list? expression)
+       (= (count expression) 4)
+       (= (first expression) 'if)))
+(defn do-expression? [expression]
+  (and (list? expression)
+       (= (first expression) 'do)))
 (defn application? [expression] (and (list? expression) (not-empty expression)))
 
 (declare apply)
 
 (defn eval [expression environment]
   (cond
+    ;; numbers
     (number? expression) expression
+    ;; nil
+    (nil? expression) expression
+    ;; symbols
     (symbol? expression) (lookup environment expression)
+    ;; anonymous functions
     (lambda-expression? expression) {:type :closure
                                      :function expression
                                      :environment environment}
+    ;; if expressions
+    (if-expression? expression)
+    (let [[_if test consequent alternative] expression]
+      (eval (if-not (nil? (eval test environment)) consequent alternative)
+            environment))
+    ;; do expressions
+    (do-expression? expression)
+    (reduce (fn [_ e] (eval e environment)) nil (rest expression))
+    ;; applications
     (application? expression)
     (apply (eval (first expression) environment)
            (map #(eval % environment) (rest expression)))

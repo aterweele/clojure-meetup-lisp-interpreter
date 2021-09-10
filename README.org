@@ -6,7 +6,8 @@
 
 
 * Why?
-
+  Because you're interested in implementing your own language, and a
+  simplified lisp is one of the easiest languages to implement.
 * Plan
 
   1. introduce the language
@@ -21,11 +22,18 @@
   functions.
 
   An *expression* in our language is one of
-  - a *number*. Syntax: ~0~, ~-1~, ~1~, ~2~, etc.
-  - a *symbol*. Syntax: ~x~, ~y~, ~+~, etc.
-  - an *anonymous function*. Syntax: ~(fn (s₁ s₂ ...) e)~, where ~s₁~,
-    ~s₂~, etc. are *symbols* and ~e~ is an *expression*
-  - an *application* of something (a function, presumably) to
+  + a *number*. Syntax: ~0~, ~-1~, ~1~, ~2~, etc.
+  + the literal *nil*. Syntax: ~nil~
+  + a *symbol*. Syntax: ~x~, ~y~, ~+~, etc.
+  + a *special form*, which is one of
+    - an *anonymous function*. Syntax: ~(fn (s₁ s₂ ...) e)~, where
+      ~s₁~, ~s₂~, etc. are *symbols* and ~e~ is an *expression*
+    - an *if expression*. Syntax: ~(if test consequent alternative)~,
+      where ~test~, ~consequent~, and ~alternative~ are *expressions*.
+    - a *do expression*. Syntax: ~(do e₁ e₂ ...)~, where ~e₁~, ~e₂~,
+      etc. are *expressions*. Note that we can have any number of
+      these expressions.
+  + an *application* of something (a function, presumably) to
     arguments. Syntax: ~(e e₁ e₂ ...)~ where ~e~, ~e₁~, ~e₂~, etc. are
     *expressions*. Note that we can have any number of arguments.
 
@@ -38,14 +46,24 @@
   1)~, then we'll get a list of three things: the symbol ~+~, the
   symbol ~a~, and the number ~1~.
 
-  This language doesn't have a lot, notably it does not have: let,
-  def, or even nil and cons.
+  This language doesn't have a lot, notably it does not have:
+  booleans, let, def, or cons.
 
 * a first look at ~eval~
   Note the form of ~eval~. We have a single ~cond~ expression, where
   we test for each kind of expression, then say how to evaluate each
   kind of expression. Let's walk through each case.
-* Closures
+* numbers and nil
+  numbers and nil evaluate to themselves. e.g. ~(eval 1 _whatever)~ is
+  ~1~.
+* symbols
+  When we encounter a symbol, we look up what that symbol is bound to
+  in the current environment.
+* anonymous functions
+  To evaluate an anonymous function, we simply capture the expression
+  itself (which is a list like ~(fn (...) ...)~) and the current
+  environment, and attach a tag to remember that this is a closure.
+  
   A /closure/ is an anonymous function and the environment in which it
   is found. For example,
 
@@ -54,11 +72,16 @@
             ^
   #+end_example
 
-  consider the inner function. It refers to ~x~. When we run that
-  inner function, we'll need to know the value of ~x~. To do that,
+  consider the inner function. It refers to ~x~. When that inner
+  function runs, it will need to know the value of ~x~. To do that,
   we'll construct a closure for the inner function: the environment of
   the closure will map ~x~ to the correct value.
-  
+* TODO if expressions
+* TODO do expressions
+* TODO application
+* +bugs+ exercises
+  the interpreter does not support shadowing ~fn~ in some
+  circumstances. Identify when, and implement a fix.
 * Limitations of our interpreter
 
   https://www.reddit.com/r/LispMemes/comments/br8koy/metacircular_evaluator_irl/
