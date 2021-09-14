@@ -6,13 +6,15 @@
 
 
 * Why?
-  Because you're interested in implementing your own language, and a
-  simplified lisp is one of the easiest languages to implement.
+  If you're interested in implementing your own language, a simplified
+  lisp is one of the easiest languages to implement.
+
+  (non-goal: understand how Clojure works. I think that this
+  interpreter is significantly different from how Clojure works.)
 * Plan
 
   1. introduce the language
-  2. show eval for the first time (this is what SICP does. Is it worth
-     it?)
+  2. show eval for the first time
   3. introduce predicate functions to recognize every element of the language
   4. start filling out the ~cond~ in eval
 
@@ -76,9 +78,30 @@
   function runs, it will need to know the value of ~x~. To do that,
   we'll construct a closure for the inner function: the environment of
   the closure will map ~x~ to the correct value.
-* TODO if expressions
-* TODO do expressions
-* TODO application
+* if expressions
+  When we implement ~if~, we get to choose what values are logically
+  true. I've chose to make ~nil~ logically false, and all other values
+  logically true. To evaluate ~if~, we evaluate the test expression,
+  test it for logical truth or falsity, and then evaluate the
+  consequent or the alternative (the "then" and the "else").
+* do expressions
+  To evaluate ~do~, we evaluate all the subexpressions. ~do~ should
+  evaluate to whatever the last subexpression evaluates to.
+* application
+  For application, we evaluate the first subexpression, which is
+  the function we're applying, and the subsequent subexpressions, which
+  are the arguments. Then we apply.
+
+  Application comes in two flavors. If whatever we're applying is a
+  builtin, this means we just apply a function from Clojure to the
+  arguments: when we see a ~+~, use Clojure's ~+~, likewise ~-~, ~*~,
+  ~/~, and whatever other functions from Clojure that we want.
+
+  The second thing we can apply is a closure, which is the result of
+  evaluating an anonymous function. In this case, we evaluate the body
+  of that anonymous function in an environment which we augment by
+  binding each argument of the anonymous function to the corresponding
+  provided argument.
 * +bugs+ exercises
   the interpreter does not support shadowing ~fn~ in some
   circumstances. Identify when, and implement a fix.
@@ -124,6 +147,8 @@
   Evaluator]] by Abelson and Sussman
 
   [[https://norvig.com/lispy.html][(How to Write a (Lisp) Interpreter (in Python))]] by Peter Norvig
+
+  [[https://www.youtube.com/watch?v=OyfBQmvr2Hc&t=3970s]["The Most Beautiful Program Ever Written"]] by William Byrd
 
   [[https://craftinginterpreters.com/][Crafting Interpreters]] by Robert Nystrom
 
