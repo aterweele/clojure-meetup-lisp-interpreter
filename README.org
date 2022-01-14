@@ -147,6 +147,8 @@
   Evaluator]] by Abelson and Sussman
 
   [[https://norvig.com/lispy.html][(How to Write a (Lisp) Interpreter (in Python))]] by Peter Norvig
+  
+  [[https://www.coursera.org/learn/programming-languages-part-b][Free course: Programming Languages, Part B.]] That one of homeworks is to create working LISP interpreter 
 
   [[https://www.youtube.com/watch?v=OyfBQmvr2Hc&t=3970s]["The Most Beautiful Program Ever Written"]] by William Byrd
 
